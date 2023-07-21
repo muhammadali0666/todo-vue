@@ -7,7 +7,7 @@
     <div class="movie_search">
       <SearchPanel :updateTerm="updateTerm"/>
       <div class="btns">
-        <Buttons />
+        <Buttons/>
       </div>
     </div>
     <MovieAddForm @createMovie="createMovie" />
@@ -22,29 +22,13 @@ import SearchPanel from "./components/searchPanel/SearchPanel.vue";
 import Buttons from "./components/buttons/Buttons.vue";
 import MovieAddForm from "./components/movieAddForm/MovieAddForm.vue";
 import InfoList from "./components/infoList/InfoList.vue";
+import axios from "axios"
 
 export default {
   data() {
     return {
       movies: [
-        {
-          id: 1,
-          name: "jaloliddin",
-          view: 113,
-          favourite: true,
-        },
-        {
-          id: 2,
-          name: "ibrat",
-          view: 271,
-          favourite: false,
-        },
-        {
-          id: 3,
-          name: "to'tamishxon",
-          view: 223,
-          favourite: false,
-        },
+        
       ],
       term: '',
     };
@@ -64,7 +48,25 @@ export default {
     },
     updateTerm(term) {
       this.term = term
+    },
+    async getData() {
+      try{
+        const {data} = await axios.get(`https://jsonplaceholder.typicode.com/posts`)
+        const foundedData = data.map((element) => ({
+          id: element.id,
+          name: element.title,
+          view: element.id,
+          favourite: false
+        }))
+        this.movies = foundedData
+        console.log(foundedData);
+    }catch(error) {
+      alert(error.message)
     }
+  }
+  },
+  mounted() {
+    this.getData()
   },
   components: {
     MoviInfo,
